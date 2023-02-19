@@ -4,11 +4,13 @@ const cors = require("cors");
 const PORT = process.env.PORT || 5000;
 const connect = require("./db/connect");
 const user = require("./routes/user");
+const station = require("./routes/station");
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/user", user);
+app.use("/api/station", station);
 
 app.listen(PORT, (err) => {
   if (err) console.log("err", err);
