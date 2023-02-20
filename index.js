@@ -5,12 +5,14 @@ const PORT = process.env.PORT || 5000;
 const connect = require("./db/connect");
 const user = require("./routes/user");
 const station = require("./routes/station");
+const session = require("./routes/session");
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/user", user);
 app.use("/api/station", station);
+app.use("/api/session", session);
 
 app.listen(PORT, (err) => {
   if (err) console.log("err", err);
