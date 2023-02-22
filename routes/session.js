@@ -2,9 +2,32 @@ const router = require("express").Router();
 const isAuth = require("../permissions/isAuth");
 const isAdmin = require("../permissions/isAdmin");
 const Session = require("../models/Session");
+const {
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+} = require("date-fns");
 
-router.get("/", isAuth, isAdmin, (req, res) => {
-  Session.find()
+router.get("/:period", isAuth, isAdmin, (req, res) => {
+  const period = req.params.period;
+  let query = "";
+
+  if (period === "daily") {
+    query = { $gte: startOfDay(new Date()), $lte: endOfDay(new Date()) };
+  }
+  if (period === "weekly") {
+    query = {
+      $gte: startOfWeek(new Date(), { weekStartsOn: 1 }),
+      $lte: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    };
+  }
+  if (period === "monthly") {
+    query = { $gte: startOfMonth(new Date()), $lte: endOfMonth(new Date()) };
+  }
+  Session.find(query && { end: query })
     .sort({ end: -1 })
     .then((docs) => res.status(200).send(docs))
     .catch((err) => res.status(400).send(err));
