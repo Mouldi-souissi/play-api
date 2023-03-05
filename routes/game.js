@@ -16,7 +16,6 @@ router.post("/", isAuth, isAdmin, async (req, res) => {
 
   const game = new Game({
     name: req.body.name,
-    logo: req.body.logo,
     prices: req.body.prices,
   });
 
