@@ -10,6 +10,7 @@ const {
   endOfMonth,
   endOfWeek,
 } = require("date-fns");
+const Account = require("../models/Account");
 
 router.get("/:period", isAuth, isAdmin, (req, res) => {
   const period = req.params.period;
@@ -27,13 +28,21 @@ router.get("/:period", isAuth, isAdmin, (req, res) => {
   if (period === "monthly") {
     query = { $gte: startOfMonth(new Date()), $lte: endOfMonth(new Date()) };
   }
-  Session.find(query && { end: query })
-    .sort({ end: -1 })
-    .then((docs) => res.status(200).send(docs))
-    .catch((err) => res.status(400).send(err));
+
+  if (period === "all") {
+    Session.find()
+      .sort({ end: -1 })
+      .then((docs) => res.status(200).send(docs))
+      .catch((err) => res.status(400).send(err));
+  } else {
+    Session.find({ end: query })
+      .sort({ end: -1 })
+      .then((docs) => res.status(200).send(docs))
+      .catch((err) => res.status(400).send(err));
+  }
 });
 
-router.post("/", isAuth, isAdmin, async (req, res) => {
+router.post("/", isAuth, async (req, res) => {
   if (!req.body) {
     res.status(400).send("missing data");
   }
@@ -48,8 +57,32 @@ router.post("/", isAuth, isAdmin, async (req, res) => {
   });
 
   try {
-    const doc = await session.save();
-    res.status(200).send(doc);
+    // update account
+    const fond = await Account.find().then((docs) => {
+      if (docs.length) {
+        return docs[0];
+      } else {
+        return {};
+      }
+    });
+
+    if (fond) {
+      await Account.findByIdAndUpdate(fond._id, {
+        deposit: Number(fond.deposit) + Number(req.body.total),
+        lastUpdated: new Date(),
+        totalGames:
+          Number(fond.totalGames) +
+          req.body.games.reduce(
+            (sum, game) => (sum += Number(game.totalGames)),
+            0
+          ),
+        gain: Number(fond.gain) + req.body.total,
+      });
+      const doc = await session.save();
+      res.status(200).send(doc);
+    } else {
+      res.status(400).send("account not found");
+    }
   } catch (err) {
     res.status(400).send(err);
   }
