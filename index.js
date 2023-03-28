@@ -11,11 +11,6 @@ const account = require("./routes/account");
 
 app.use(cors());
 app.use(express.json());
-app.use(function (req, res, next) {
-  res.setHeader("Content-Type", "text/html");
-  res.setHeader("Cache-Control", "s-max-age=1, stale-while-revalidate");
-  next();
-});
 
 app.use("/api/user", user);
 app.use("/api/station", station);
@@ -32,3 +27,5 @@ app.listen(PORT, (err) => {
   console.log(`app is running on port ${PORT}`);
   connect();
 });
+
+module.exports = app;
