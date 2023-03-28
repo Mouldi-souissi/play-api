@@ -18,7 +18,7 @@ app.use("/api/session", session);
 app.use("/api/game", game);
 app.use("/api/account", account);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("welcome to play api");
 });
 
