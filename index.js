@@ -18,6 +18,10 @@ app.use("/api/session", session);
 app.use("/api/game", game);
 app.use("/api/account", account);
 
+app.get("/", (req, res) => {
+  res.send("welcome to play api");
+});
+
 app.listen(PORT, (err) => {
   if (err) console.log("err", err);
   console.log(`app is running on port ${PORT}`);
