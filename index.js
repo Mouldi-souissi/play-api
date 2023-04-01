@@ -22,6 +22,5 @@ connect().then(() => {
   app.listen(PORT, (err) => {
     if (err) console.log("err", err);
     console.log(`app is running on port ${PORT}`);
-    connect();
   });
 });
