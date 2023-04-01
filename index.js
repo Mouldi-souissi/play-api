@@ -10,12 +10,6 @@ const account = require("./routes/account");
 
 app.use(cors());
 app.use(express.json());
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
 
 app.use("/api/user", user);
 app.use("/api/station", station);
@@ -24,8 +18,10 @@ app.use("/api/game", game);
 app.use("/api/account", account);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, (err) => {
-  if (err) console.log("err", err);
-  console.log(`app is running on port ${PORT}`);
-  connect();
+connect().then(() => {
+  app.listen(PORT, (err) => {
+    if (err) console.log("err", err);
+    console.log(`app is running on port ${PORT}`);
+    connect();
+  });
 });
