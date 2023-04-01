@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const PORT = process.env.PORT || 5000;
 const connect = require("./db/connect");
 const user = require("./routes/user");
 const station = require("./routes/station");
@@ -18,14 +17,9 @@ app.use("/api/session", session);
 app.use("/api/game", game);
 app.use("/api/account", account);
 
-app.get("/api", (req, res) => {
-  res.send("welcome to play api");
-});
-
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, (err) => {
   if (err) console.log("err", err);
   console.log(`app is running on port ${PORT}`);
   connect();
 });
-
-module.exports = app;

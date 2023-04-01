@@ -6,16 +6,10 @@
       "use": "@vercel/node"
     }
   ],
-
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.js" }],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
-    },
-    {
-      "source": "https://play-api-six.vercel.app/(.*)",
-      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+      "src": "/(.*)",
+      "dest": "/"
     }
   ]
 }
